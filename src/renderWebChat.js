@@ -7,8 +7,8 @@ import { readFile } from 'fs';
 
 const readFileAsync = promisify(readFile);
 
-// const CHROME_WEBDRIVER_URL = 'http://chrome:4444/wd/hub';
-const CHROME_WEBDRIVER_URL = 'http://localhost:4444/wd/hub';
+const CHROME_WEBDRIVER_URL = 'http://chrome:4444/wd/hub';
+// const CHROME_WEBDRIVER_URL = 'http://localhost:4444/wd/hub';
 // const CHROME_WEBDRIVER_URL = 'http://hub-cloud.browserstack.com/';
 
 function buildChromeDriver() {
