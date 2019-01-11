@@ -3,6 +3,7 @@ import { config } from 'dotenv';
 
 config();
 
+import { createHash } from 'crypto';
 import { createServer, plugins } from 'restify';
 import { URL } from 'url';
 import chatDown from 'chatdown';
@@ -16,6 +17,16 @@ server.use(plugins.queryParser());
 server.get('/chatdown', async (req, res) => {
   try {
     const baseURL = new URL(req.query.url);
+    const { hostname } = baseURL;
+
+    if (
+      hostname !== 'raw.githubusercontent.com'
+      && hostname !== 'github.com'
+      && hostname !== 'www.github.com'
+    ) {
+      return res.send(400);
+    }
+
     const chatdownRes = await fetch(baseURL.toString());
 
     if (!chatdownRes.ok) {
@@ -23,6 +34,11 @@ server.get('/chatdown', async (req, res) => {
     }
 
     let chatdown = await chatdownRes.text();
+    const hash = createHash('sha256');
+
+    hash.update(chatdown);
+
+    const eTag = hash.digest('hex');
 
     chatdown = chatdown.replace(
       /\[Attachment\s*=\s*([^\s\]]*)(.*?\])/g,
@@ -35,7 +51,9 @@ server.get('/chatdown', async (req, res) => {
 
     const activities = await chatDown(chatdown);
 
+    res.setHeader('Cache-Control', 'max-age=120');
     res.setHeader('Content-Type', 'image/png');
+    res.setHeader('ETag', eTag);
     res.end(await renderWebChat(activities));
   } catch({ message, stack }) {
     console.warn(message);
