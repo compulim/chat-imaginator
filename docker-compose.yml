@@ -1,0 +1,25 @@
+version: '3'
+
+services:
+  # On Windows, run with COMPOSE_CONVERT_WINDOWS_PATHS=1
+
+  chrome:
+    # https://github.com/SeleniumHQ/docker-selenium
+    # https://hub.docker.com/r/selenium/standalone-chrome/tags/
+    image: selenium/standalone-chrome:3.141.0-actinium
+    depends_on:
+    - server
+    ports:
+    - "4444:4444"
+    restart: always
+    volumes:
+    - /dev/shm:/dev/shm
+
+  server:
+    build:
+      context: ./
+      dockerfile: Dockerfile
+    image: webchat.azurecr.io/chatdownimaginator-server
+    ports:
+    - "80:80"
+    restart: always

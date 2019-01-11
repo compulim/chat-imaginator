@@ -1,0 +1,44 @@
+{
+  "name": "chatdown-imaginator",
+  "version": "0.0.0-0",
+  "description": "",
+  "main": "lib/index.js",
+  "scripts": {
+    "build": "babel --extensions .js,.ts,.tsx --ignore **/*.spec.js,**/*.spec.ts,**/*.spec.tsx,**/*.test.js,**/*.test.ts,**/*.test.tsx,__test__/**/*.js,__test__/**/*.ts,__test__/**/*.tsx --out-dir lib --source-maps inline --verbose src",
+    "start": "node-dev --no-notify --respawn lib",
+    "test": "jest",
+    "watch": "concurrently --names \"babel,start\" \"npm run watch:babel\" \"npm start\"",
+    "watch:babel": "npm run build -- --watch"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/compulim/chat-imaginator.git"
+  },
+  "author": "William Wong <compulim@hotmail.com> (http://compulim.info/)",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/compulim/chat-imaginator/issues"
+  },
+  "homepage": "https://github.com/compulim/chat-imaginator#readme",
+  "devDependencies": {
+    "@babel/cli": "^7.2.3",
+    "@babel/core": "^7.2.2",
+    "@babel/plugin-proposal-object-rest-spread": "^7.2.0",
+    "@babel/preset-env": "^7.2.3",
+    "babel-core": "^7.0.0-bridge.0",
+    "concurrently": "^4.1.0",
+    "jest": "^23.6.0",
+    "node-dev": "^3.1.3",
+    "serve-handler": "^5.0.7",
+    "simple-update-in": "^2.0.2"
+  },
+  "dependencies": {
+    "@babel/polyfill": "^7.2.5",
+    "@babel/runtime": "^7.2.0",
+    "chatdown": "^1.1.0",
+    "dotenv": "^6.2.0",
+    "node-fetch": "^2.3.0",
+    "restify": "^7.5.0",
+    "selenium-webdriver": "^4.0.0-alpha.1"
+  }
+}
