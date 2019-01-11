@@ -1,0 +1,77 @@
+apiVersion: apps/v1beta1
+kind: Deployment
+metadata:
+  name: chrome
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: chrome
+    spec:
+      containers:
+      - name: chrome
+        image: selenium/standalone-chrome:3.141.0-actinium
+        ports:
+        - containerPort: 4444
+          name: webdriver
+        resources:
+          limits:
+            cpu: 100m
+            memory: 1500Mi
+          requests:
+            cpu: 50m
+            memory: 1500Mi
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: chrome
+spec:
+  ports:
+  - port: 4444
+    name: webdriver
+  selector:
+    app: chrome
+
+---
+apiVersion: apps/v1beta1
+kind: Deployment
+metadata:
+  name: server
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: server
+    spec:
+      containers:
+      - name: server
+        image: webchat.azurecr.io/chatdownimaginator-server:latest
+        ports:
+        - containerPort: 80
+          name: http
+        resources:
+          limits:
+            cpu: 100m
+            memory: 200Mi
+          requests:
+            cpu: 50m
+            memory: 100Mi
+      imagePullSecrets:
+      - name: acr-auth
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: server
+spec:
+  type: LoadBalancer
+  ports:
+  - port: 80
+    name: http
+  selector:
+    app: server
